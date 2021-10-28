@@ -8,12 +8,19 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.lifecycleScope
 import com.ldlywt.commoncode.R
 import com.ldlywt.commoncode.databinding.ActivityLiveDataTestBinding
 import com.ldlywt.commoncode.ktx.toast
 import com.ldlywt.commoncode.livedata.RequestPermissionLiveData
 import com.ldlywt.commoncode.livedata.TakePhotoLiveData
 import com.ldlywt.commoncode.livedata.TimerGlobalLiveData
+import com.ldlywt.commoncode.location.NetWorkLocationHelper
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.buffer
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.launch
 
 class LiveDataTestActivity : AppCompatActivity(R.layout.activity_live_data_test) {
 
@@ -24,9 +31,22 @@ class LiveDataTestActivity : AppCompatActivity(R.layout.activity_live_data_test)
 
     private var requestPermissionLiveData = RequestPermissionLiveData(activityResultRegistry, "key")
 
-    private val requestPermissionLauncher: ActivityResultLauncher<String> =
+    private val requestLocationPermissionLauncher: ActivityResultLauncher<String> =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { result: Boolean ->
             toast("request permission $result")
+            if (result) {
+                lifecycleScope.launch {
+//                    val location = NetWorkLocationHelper().getNetLocation(this@LiveDataTestActivity)
+//                    Log.i("wutao--> ", "location::  $location")
+                    NetWorkLocationHelper()
+                        .getNetLocationFlow(this@LiveDataTestActivity)
+                        .buffer(Channel.CONFLATED)
+                        .debounce(300)
+                        .collect { location ->
+                            Log.i("wutao--> ", "location::  $location")
+                        }
+                }
+            }
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +76,7 @@ class LiveDataTestActivity : AppCompatActivity(R.layout.activity_live_data_test)
         }
 
         mBinding.btRequestPermission.setOnClickListener {
-            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            requestLocationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
 
         mBinding.btRequestPermissionV2.setOnClickListener {
