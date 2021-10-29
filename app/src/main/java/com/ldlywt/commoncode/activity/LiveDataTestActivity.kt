@@ -39,7 +39,7 @@ class LiveDataTestActivity : AppCompatActivity(R.layout.activity_live_data_test)
 //                    val location = NetWorkLocationHelper().getNetLocation(this@LiveDataTestActivity)
 //                    Log.i("wutao--> ", "location::  $location")
                     NetWorkLocationHelper()
-                        .getNetLocationFlow(this@LiveDataTestActivity)
+                        .getNetLocationFlow(this@LiveDataTestActivity, lifecycleScope)
                         .buffer(Channel.CONFLATED)
                         .debounce(300)
                         .collect { location ->

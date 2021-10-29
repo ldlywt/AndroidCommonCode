@@ -8,10 +8,13 @@ import android.location.LocationManager
 import android.os.Build
 import android.os.Looper
 import androidx.core.util.Consumer
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -61,7 +64,7 @@ class NetWorkLocationHelper {
      */
     @ExperimentalCoroutinesApi
     @SuppressLint("MissingPermission")
-    suspend fun getNetLocationFlow(context: Context): Flow<Location?> {
+    suspend fun getNetLocationFlow(context: Context, externalScope: CoroutineScope): Flow<Location?> {
         return callbackFlow<Location?> {
             val locationManager: LocationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -75,6 +78,10 @@ class NetWorkLocationHelper {
                     locationManager.removeUpdates(locationListener)
                 }
             }
-        }
+        }.shareIn(
+            externalScope,
+            replay = 0,
+            started = SharingStarted.WhileSubscribed()
+        )
     }
 }

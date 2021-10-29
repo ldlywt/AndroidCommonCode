@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.shareIn
 
-class SharedLocationManager constructor(context: Context, externalScope: CoroutineScope) {
+class FusedLocationHelper constructor(context: Context, externalScope: CoroutineScope) {
 
     private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
     private val locationRequest = createLocationRequest()
