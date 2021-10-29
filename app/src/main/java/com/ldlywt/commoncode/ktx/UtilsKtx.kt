@@ -8,8 +8,9 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
+import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
-import com.ldlywt.commoncode.App
+import com.ldlywt.commoncode.applicationContext
 import java.util.*
 
 /**
@@ -33,16 +34,18 @@ fun stringOf(@StringRes id: Int, vararg formatArgs: Any): String = getString(id,
 
 fun stringOf(@StringRes id: Int): String = getString(id)
 
+fun getColor(@ColorRes colorId: Int) = applicationContext.getColor(colorId)
+
 fun EditText.getNotNullText(): String = text?.toString()?.trim() ?: ""
 
 fun EditText.getNotNullUpperCaseText(): String = getNotNullText().toUpperCase(Locale.ENGLISH)
 
 fun getString(@StringRes id: Int, vararg formatArgs: Any?): String {
-    return App.instance.resources.getString(id, *formatArgs)
+    return applicationContext.getString(id, *formatArgs)
 }
 
 fun toast(message: CharSequence, duration: Int = Toast.LENGTH_SHORT) {
-    Toast.makeText(App.instance, message, duration).show()
+    Toast.makeText(applicationContext, message, duration).show()
 }
 
 //may only available on real device

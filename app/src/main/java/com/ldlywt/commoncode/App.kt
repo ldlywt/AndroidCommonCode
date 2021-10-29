@@ -2,6 +2,8 @@ package com.ldlywt.commoncode
 
 import android.app.Application
 
+val applicationContext = App.instance
+
 class App : Application() {
 
     override fun onCreate() {

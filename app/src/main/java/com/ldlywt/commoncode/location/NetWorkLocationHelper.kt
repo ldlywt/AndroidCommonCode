@@ -19,7 +19,7 @@ import kotlin.coroutines.resume
 
 class NetWorkLocationHelper(context: Context, externalScope: CoroutineScope) {
 
-    val locationManager: LocationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    private val locationManager: LocationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
     @SuppressLint("MissingPermission")
     suspend fun getNetLocation(context: Context, callback: (location: Location) -> Unit) {
