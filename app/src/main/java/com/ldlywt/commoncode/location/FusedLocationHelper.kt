@@ -12,10 +12,7 @@ import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.*
 
 class FusedLocationHelper constructor(context: Context, externalScope: CoroutineScope) {
 
@@ -33,7 +30,7 @@ class FusedLocationHelper constructor(context: Context, externalScope: Coroutine
 
     @ExperimentalCoroutinesApi
     @SuppressLint("MissingPermission")
-    private val _locationUpdates = callbackFlow<Location> {
+    private val _locationUpdates: SharedFlow<Location> = callbackFlow<Location> {
         val callback = object : LocationCallback() {
             override fun onLocationResult(result: LocationResult?) {
                 result ?: return
