@@ -8,13 +8,16 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import com.ldlywt.commoncode.R
 import com.ldlywt.commoncode.databinding.ActivityLiveDataTestBinding
+import com.ldlywt.commoncode.ktx.launchAndCollectIn
 import com.ldlywt.commoncode.ktx.toast
 import com.ldlywt.commoncode.livedata.RequestPermissionLiveData
 import com.ldlywt.commoncode.livedata.TakePhotoLiveData
 import com.ldlywt.commoncode.livedata.TimerGlobalLiveData
+import com.ldlywt.commoncode.location.LocationPermissionUtils
 import com.ldlywt.commoncode.location.NetWorkLocationHelper
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.buffer
@@ -53,6 +56,17 @@ class LiveDataTestActivity : AppCompatActivity(R.layout.activity_live_data_test)
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
         init()
+        requestLocationWhenOnStart()
+    }
+
+    private fun requestLocationWhenOnStart() {
+        if (LocationPermissionUtils.isLocationPermissionGranted(this)) {
+            NetWorkLocationHelper(this, lifecycleScope)
+                .getNetLocationFlow()
+                .launchAndCollectIn(this, Lifecycle.State.RESUMED) {
+                    Log.i("wutao--> ", "New Location : $it")
+                }
+        }
     }
 
     private fun init() {
