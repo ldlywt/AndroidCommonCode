@@ -10,6 +10,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.ldlywt.commoncode.activity.LiveDataTestActivity
 import com.ldlywt.commoncode.databinding.ActivityMainBinding
 import com.ldlywt.commoncode.ktx.toast
+import com.ldlywt.commoncode.view.LifecycleView
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
@@ -28,5 +29,6 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         mBinding.btLiveData.setOnClickListener {
             activityResultLauncher.launch(Intent(this, LiveDataTestActivity::class.java))
         }
+        mBinding.root.addView(LifecycleView(this, lifecycleOwner = this))
     }
 }
