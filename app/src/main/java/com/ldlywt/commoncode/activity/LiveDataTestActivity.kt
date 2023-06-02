@@ -12,7 +12,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import com.ldlywt.commoncode.R
 import com.ldlywt.commoncode.databinding.ActivityLiveDataTestBinding
-import com.ldlywt.commoncode.ktx.launchAndCollectIn
+import com.ldlywt.ktx.launchAndCollectIn
 import com.ldlywt.commoncode.ktx.toast
 import com.ldlywt.commoncode.livedata.RequestPermissionLiveData
 import com.ldlywt.commoncode.livedata.TakePhotoLiveData
